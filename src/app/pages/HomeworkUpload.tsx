@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { Link, useNavigate } from "react-router";
 import { ArrowLeft, FileText, History, CheckCircle2, Clock, Users, TrendingUp, ChevronDown } from "lucide-react";
 
@@ -217,91 +218,109 @@ export default function HomeworkUpload() {
       )}
 
       {/* Mobile Bottom Sheet Modal */}
-      {showModal && (
-        <div className="absolute inset-0 z-50 flex flex-col justify-end">
-          {/* Backdrop */}
-          <div className="absolute inset-0 bg-black/50" onClick={() => setShowModal(false)} />
+      <AnimatePresence>
+        {showModal && (
+          <motion.div
+            key="modal-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="absolute inset-0 z-50"
+          >
+            {/* Backdrop */}
+            <div className="absolute inset-0 bg-black/40" onClick={() => setShowModal(false)} />
 
-          {/* Sheet */}
-          <div className="relative bg-white rounded-t-3xl px-6 pt-8 pb-10 shadow-2xl animate-slide-up">
-            {/* Handle */}
-            <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-6" />
+            {/* Sheet */}
+            <motion.div
+              key="modal-sheet"
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 28, stiffness: 300, mass: 0.8 }}
+              className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl px-6 pt-6 pb-10 shadow-2xl"
+            >
+              {/* Handle */}
+              <div className="w-10 h-1 bg-gray-300 rounded-full mx-auto mb-5" />
 
-            {/* Title */}
-            <h3 className="text-lg font-semibold text-gray-900 mb-6 text-center">新建批改</h3>
+              {/* Title */}
+              <h3 className="text-base font-semibold text-gray-900 mb-5">新建批改</h3>
 
-            {/* Input */}
-            <div className="mb-4">
-              <input
-                type="text"
-                placeholder="输入新主题或选择下方最近主题"
-                value={homeworkTitle}
-                onChange={(e) => setHomeworkTitle(e.target.value)}
-                className="w-full px-4 py-3.5 text-sm bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                autoFocus
-              />
-            </div>
-
-            {/* Recent Topics */}
-            <div className="mb-6">
-              <div className="text-xs text-gray-400 mb-2.5">最近作业主题</div>
-              <div className="flex gap-2 flex-wrap">
-                {recentTopics.map((topic) => (
-                  <button
-                    key={topic}
-                    type="button"
-                    onClick={() => setHomeworkTitle(topic)}
-                    className={`px-3.5 py-2 text-xs rounded-xl border transition-all ${
-                      homeworkTitle === topic
-                        ? "bg-indigo-50 border-indigo-300 text-indigo-700"
-                        : "bg-gray-50 border-gray-200 text-gray-500 active:bg-gray-100"
-                    }`}
-                  >
-                    {topic}
-                  </button>
-                ))}
+              {/* Input */}
+              <div className="mb-5">
+                <label className="text-xs text-gray-500 mb-2 block">作业主题</label>
+                <input
+                  type="text"
+                  placeholder="输入新主题或选择下方最近主题"
+                  value={homeworkTitle}
+                  onChange={(e) => setHomeworkTitle(e.target.value)}
+                  className="w-full px-4 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  autoFocus
+                />
               </div>
-            </div>
 
-            {/* Class Selection - Mobile friendly */}
-            <div className="mb-6">
-              <div className="flex gap-2 flex-wrap">
-                {classes.map((cls) => (
-                  <button
-                    key={cls}
-                    type="button"
-                    onClick={() => setSelectedClass(cls === selectedClass ? "" : cls)}
-                    className={`px-4 py-2.5 text-sm rounded-xl transition-all ${
-                      selectedClass === cls
-                        ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md shadow-indigo-200/50"
-                        : "bg-gray-50 border border-gray-200 text-gray-600 active:bg-gray-100"
-                    }`}
-                  >
-                    {cls}
-                  </button>
-                ))}
+              {/* Recent Topics */}
+              <div className="mb-5">
+                <label className="text-xs text-gray-500 mb-2 block">最近作业主题</label>
+                <div className="flex gap-2 flex-wrap">
+                  {recentTopics.map((topic) => (
+                    <button
+                      key={topic}
+                      type="button"
+                      onClick={() => setHomeworkTitle(topic)}
+                      className={`px-3.5 py-2 text-xs rounded-xl transition-all active:scale-95 ${
+                        homeworkTitle === topic
+                          ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
+                          : "bg-gray-50 border border-gray-200 text-gray-600"
+                      }`}
+                    >
+                      {topic}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* Buttons */}
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowModal(false)}
-                className="flex-1 py-3.5 text-sm text-gray-600 bg-gray-100 rounded-2xl active:scale-[0.98] transition-all font-medium"
-              >
-                取消
-              </button>
-              <button
-                onClick={handleUpload}
-                disabled={!homeworkTitle.trim() || !selectedClass}
-                className="flex-1 py-3.5 text-sm text-white bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl active:scale-[0.98] transition-all font-medium shadow-lg shadow-indigo-200/50 disabled:opacity-40 disabled:shadow-none"
-              >
-                开始批改
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+              {/* Class Selection */}
+              <div className="mb-6">
+                <label className="text-xs text-gray-500 mb-2 block">选择班级</label>
+                <div className="flex gap-2 flex-wrap">
+                  {classes.map((cls) => (
+                    <button
+                      key={cls}
+                      type="button"
+                      onClick={() => setSelectedClass(cls === selectedClass ? "" : cls)}
+                      className={`px-4 py-2.5 text-sm rounded-xl transition-all active:scale-95 ${
+                        selectedClass === cls
+                          ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
+                          : "bg-gray-50 border border-gray-200 text-gray-600"
+                      }`}
+                    >
+                      {cls}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="flex-1 py-3.5 text-sm text-gray-600 bg-gray-100 rounded-xl active:scale-95 transition-all font-medium"
+                >
+                  取消
+                </button>
+                <button
+                  onClick={handleUpload}
+                  disabled={!homeworkTitle.trim() || !selectedClass}
+                  className="flex-1 py-3.5 text-sm text-white bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl active:scale-95 transition-all font-medium shadow-lg shadow-indigo-200/50 disabled:opacity-40 disabled:shadow-none"
+                >
+                  开始批改
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

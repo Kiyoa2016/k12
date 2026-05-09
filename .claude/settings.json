@@ -1,7 +1,15 @@
 {
   "permissions": {
     "allow": [
-      "Bash(pnpm dev *)"
+      "Bash(pnpm dev *)",
+      "Bash(npx vite *)",
+      "Read(//c/Users/汪羲/.claude/plugins/cache/claude-plugins-official/superpowers/5.1.0/skills/brainstorming/**)",
+      "Bash(ls -la \"C:\\\\Users\\\\汪羲\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\\\\5.1.0\\\\scripts\")",
+      "Read(//c/Users/汪羲/.claude/plugins/cache/claude-plugins-official/superpowers/5.1.0/scripts/**)",
+      "Read(//c/Users/汪羲/.claude/plugins/cache/claude-plugins-official/superpowers/5.1.0/**)",
+      "Bash(bash start-server.sh --project-dir \"e:\\\\Document\\\\04 奇意\\\\01 果仁白板\\\\01 原型设计\\\\K12老师助手\")",
+      "Bash(bash stop-server.sh \"e:\\\\Document\\\\04 奇意\\\\01 果仁白板\\\\01 原型设计\\\\K12老师助手\\\\.superpowers\\\\brainstorm\\\\302-1778345779\")",
+      "Bash(npm run *)"
     ]
   }
 }
