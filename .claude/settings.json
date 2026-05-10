@@ -9,7 +9,15 @@
       "Read(//c/Users/汪羲/.claude/plugins/cache/claude-plugins-official/superpowers/5.1.0/**)",
       "Bash(bash start-server.sh --project-dir \"e:\\\\Document\\\\04 奇意\\\\01 果仁白板\\\\01 原型设计\\\\K12老师助手\")",
       "Bash(bash stop-server.sh \"e:\\\\Document\\\\04 奇意\\\\01 果仁白板\\\\01 原型设计\\\\K12老师助手\\\\.superpowers\\\\brainstorm\\\\302-1778345779\")",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(node -e \"const p = require\\('./package.json'\\); console.log\\(JSON.stringify\\(p.scripts, null, 2\\)\\)\")",
+      "Bash(pnpm build *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(npx tsc *)",
+      "Bash(pnpm exec *)",
+      "Bash(ls -lt /tmp/*.png 2>/dev/null | head -5; ls -lt /tmp/*.jpg 2>/dev/null | head -5; ls -lt ~/AppData/Local/Temp/*.png 2>/dev/null | head -5; ls -lt ~/AppData/Local/Temp/*.jpg 2>/dev/null | head -5)",
+      "Read(//c/Users/汪羲/AppData/Local/Temp/**)"
     ]
   }
 }

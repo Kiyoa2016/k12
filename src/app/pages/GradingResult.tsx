@@ -1,11 +1,8 @@
-import { useState } from "react";
 import { Link, useParams } from "react-router";
-import { ArrowLeft, Edit, Save, CheckCircle, XCircle } from "lucide-react";
+import { ArrowLeft, CheckCircle, XCircle } from "lucide-react";
 
 export default function GradingResult() {
   const { studentId } = useParams();
-  const [isEditing, setIsEditing] = useState(false);
-  const [score, setScore] = useState(92);
 
   const studentInfo = {
     name: "张小明",
@@ -65,32 +62,13 @@ export default function GradingResult() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 pb-20">
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-10 pt-8">
-        <div className="px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link to="/app/homework-upload">
-              <div className="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center active:scale-90 transition-transform">
-                <ArrowLeft className="w-5 h-5 text-blue-700" />
-              </div>
-            </Link>
-            <h1 className="text-lg bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">批改结果</h1>
-          </div>
-          {isEditing ? (
-            <button
-              onClick={() => setIsEditing(false)}
-              className="px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-sm rounded-xl flex items-center gap-1.5 shadow-lg shadow-blue-200/50 active:scale-95 transition-transform"
-            >
-              <Save className="w-4 h-4" />
-              保存
-            </button>
-          ) : (
-            <button
-              onClick={() => setIsEditing(true)}
-              className="px-3 py-1.5 bg-white border border-blue-200 text-blue-700 text-sm rounded-xl flex items-center gap-1.5 active:bg-blue-50 transition-colors"
-            >
-              <Edit className="w-4 h-4" />
-              编辑
-            </button>
-          )}
+        <div className="px-4 py-3 flex items-center gap-3">
+          <Link to="/app/homework-upload">
+            <div className="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center active:scale-90 transition-transform">
+              <ArrowLeft className="w-5 h-5 text-blue-700" />
+            </div>
+          </Link>
+          <h1 className="text-lg bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">批改结果</h1>
         </div>
       </header>
 
@@ -143,74 +121,32 @@ export default function GradingResult() {
         <div className="space-y-3 mb-4">
           {questions.map((question, index) => (
             <div key={question.id} className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-lg shadow-blue-100/50 border border-blue-50/50">
-              {/* Question Header */}
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex items-start gap-2 flex-1">
-                  <div
-                    className={`mt-0.5 flex-shrink-0 ${
-                      question.isCorrect ? "text-blue-500" : "text-red-500"
-                    }`}
-                  >
-                    {question.isCorrect ? (
-                      <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
-                        <CheckCircle className="w-4 h-4" />
-                      </div>
-                    ) : (
-                      <div className="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center">
-                        <XCircle className="w-4 h-4" />
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm text-gray-900 mb-1.5">
-                      第{index + 1}题: {question.question}
+              {/* Question */}
+              <div className="flex items-start gap-2">
+                <div className="mt-0.5 flex-shrink-0">
+                  {question.isCorrect ? (
+                    <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+                      <CheckCircle className="w-4 h-4 text-blue-500" />
                     </div>
-                    <div className="space-y-0.5 text-xs">
-                      <div className="flex gap-1.5">
-                        <span className="text-gray-500 flex-shrink-0">学生答案:</span>
-                        <span
-                          className={
-                            question.isCorrect ? "text-blue-600" : "text-red-600"
-                          }
-                        >
-                          {question.studentAnswer}
-                        </span>
-                      </div>
-                      {!question.isCorrect && (
-                        <div className="flex gap-1.5">
-                          <span className="text-gray-500 flex-shrink-0">正确答案:</span>
-                          <span className="text-blue-600">{question.correctAnswer}</span>
-                        </div>
-                      )}
+                  ) : (
+                    <div className="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center">
+                      <XCircle className="w-4 h-4 text-red-500" />
                     </div>
-                  </div>
+                  )}
                 </div>
-                {isEditing ? (
-                  <input
-                    type="number"
-                    defaultValue={question.score}
-                    className="w-14 px-1.5 py-0.5 border border-blue-200 rounded text-center text-xs flex-shrink-0"
-                  />
-                ) : (
-                  <div className="text-xs text-blue-700 flex-shrink-0 bg-blue-50 px-2 py-1 rounded-lg">
-                    {question.score}/{question.maxScore}分
-                  </div>
-                )}
+                <div className="text-sm text-gray-900">
+                  第{index + 1}题: {question.question}
+                </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Action Buttons */}
-        <div className="space-y-2">
-          <button className="w-full py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-sm rounded-2xl transition-all shadow-lg shadow-blue-200/50 active:scale-95">
-            加入错题库
-          </button>
-          <button className="w-full py-3 bg-white border border-blue-200 text-blue-700 text-sm rounded-2xl active:bg-blue-50 transition-colors">
-            生成学情报告
-          </button>
-        </div>
+        <p className="text-xs text-gray-400 text-center">
+          查看学生答题详情及批改详情，请在PC端查看
+        </p>
       </main>
+
     </div>
   );
 }

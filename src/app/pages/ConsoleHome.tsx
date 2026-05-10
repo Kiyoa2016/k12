@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import { BookOpen, BrainCircuit, BarChart3, FileText, Archive, Share2 } from "lucide-react";
+import { BookOpen, BarChart3, FileText, ClipboardList, Camera } from "lucide-react";
 
 interface ConsoleCard {
   title: string;
@@ -12,6 +12,13 @@ interface ConsoleCard {
 
 const menuCards: ConsoleCard[] = [
   {
+    title: "作业批改",
+    description: "AI智能批改，拍照上传自动识别",
+    icon: Camera,
+    gradient: "from-blue-500 to-indigo-600",
+    link: "/console/homework-grading",
+  },
+  {
     title: "错题库",
     description: "知识点掌握情况分析，薄弱环节定位",
     icon: BookOpen,
@@ -20,11 +27,11 @@ const menuCards: ConsoleCard[] = [
     badge: "8个薄弱点",
   },
   {
-    title: "智能组卷",
-    description: "基于错题数据，AI自动生成针对性试卷",
-    icon: BrainCircuit,
-    gradient: "from-blue-500 to-indigo-600",
-    link: "/console/paper-config",
+    title: "作业本",
+    description: "作业记录与完成情况追踪",
+    icon: ClipboardList,
+    gradient: "from-teal-500 to-emerald-600",
+    link: "/console/homework-book",
   },
   {
     title: "学情分析",
@@ -41,20 +48,6 @@ const menuCards: ConsoleCard[] = [
     gradient: "from-sky-500 to-blue-600",
     link: "/console/personalized-homework",
   },
-  {
-    title: "家长档案",
-    description: "家长沟通记录，作业反馈管理",
-    icon: Archive,
-    gradient: "from-purple-500 to-pink-600",
-    link: "/console/parent-archive",
-  },
-  {
-    title: "分享管理",
-    description: "资源共享，作业模板管理",
-    icon: Share2,
-    gradient: "from-emerald-500 to-teal-600",
-    link: "/console/share-manage",
-  },
 ];
 
 export default function ConsoleHome() {
@@ -67,7 +60,7 @@ export default function ConsoleHome() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">K12教师助手</h1>
-              <p className="text-sm text-gray-500 mt-1">教学管理 · 数据分析 · 智能组卷</p>
+              <p className="text-sm text-gray-500 mt-1">教学管理 · 数据分析</p>
             </div>
           </div>
         </div>

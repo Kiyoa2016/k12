@@ -5,6 +5,7 @@ import LandingPage from "./pages/LandingPage";
 import Home from "./pages/Home";
 import ConsoleHome from "./pages/ConsoleHome";
 import HomeworkUpload from "./pages/HomeworkUpload";
+import HomeworkGrading from "./pages/HomeworkGrading";
 import StudentSelection from "./pages/StudentSelection";
 import Camera from "./pages/Camera";
 import GradingResult from "./pages/GradingResult";
@@ -48,6 +49,7 @@ export const router = createBrowserRouter([
     Component: ConsoleLayout,
     children: [
       { index: true, Component: ConsoleHome },
+      { path: "homework-grading", Component: HomeworkGrading },
       { path: "error-bank", Component: ErrorBank },
       { path: "paper-config", Component: PaperConfig },
       { path: "paper-preview", Component: PaperPreview },
