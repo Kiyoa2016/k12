@@ -13,7 +13,7 @@ interface ConsoleCard {
 const menuCards: ConsoleCard[] = [
   {
     title: "作业批改",
-    description: "AI智能批改，拍照上传自动识别",
+    description: "查看学生作业详情及AI批改结果",
     icon: Camera,
     gradient: "from-blue-500 to-indigo-600",
     link: "/console/homework-grading",

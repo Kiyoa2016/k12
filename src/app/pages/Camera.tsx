@@ -43,9 +43,6 @@ export default function Camera() {
               {mode === "paper" ? "拍摄试卷" : "拍摄课堂作业"}
             </h1>
           </div>
-          <div className="px-2.5 py-1 bg-blue-500/20 backdrop-blur-sm border border-blue-500/30 rounded-full">
-            <span className="text-xs text-blue-300">AI识别中</span>
-          </div>
         </div>
       </header>
 
@@ -94,11 +91,6 @@ export default function Camera() {
             )}
           </button>
 
-          {/* AI Hint */}
-          <div className="absolute top-3 left-3 px-3 py-1.5 bg-blue-500/20 backdrop-blur-sm border border-blue-500/30 rounded-xl flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-blue-300" />
-            <span className="text-xs text-blue-300">AI智能识别</span>
-          </div>
         </div>
       </div>
 

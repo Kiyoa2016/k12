@@ -3,7 +3,11 @@
     "allow": [
       "Bash(npm --version)",
       "Bash(pnpm --version)",
-      "Read(//tmp/**)"
+      "Read(//tmp/**)",
+      "Bash(git checkout *)",
+      "Bash(awk 'NR>=316 && NR<=322' \"e:/Document/04 奇意/01 果仁白板/01 原型设计/K12老师助手/src/app/pages/StudentSelection.tsx\")",
+      "Bash(npx --package typescript tsc --noEmit --pretty)",
+      "Bash(npx --package typescript tsc -p tsconfig.json --noEmit)"
     ]
   }
 }
