@@ -1,11 +1,9 @@
 import { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { motion, AnimatePresence } from "motion/react";
 import {
   ArrowLeft,
   ChevronRight,
   Users,
-  Target,
   BookOpen,
   AlertTriangle,
   Filter,
@@ -389,14 +387,6 @@ const mockKnowledgePoints: KnowledgePoint[] = [
 
 const classes = ["三年级1班", "三年级2班", "三年级3班"];
 
-/* ============ Slide Transition ============ */
-
-const slideVariants = {
-  enter: { x: 80, opacity: 0 },
-  center: { x: 0, opacity: 1 },
-  exit: { x: -80, opacity: 0 },
-};
-
 /* ============ Sub-components ============ */
 
 function DifficultyDots({ level }: { level: number }) {
@@ -457,11 +447,10 @@ function KnowledgeOverview({
             <span className="text-xs text-gray-400">按错误率排序</span>
           </div>
           {data.map((kp) => (
-            <motion.button
+            <button
               key={kp.id}
               onClick={() => onSelectKnowledge(kp)}
-              className="w-full text-left bg-white/90 backdrop-blur-sm rounded-xl p-4 lg:p-5 border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-100 transition-all"
-              whileTap={{ scale: 0.98 }}
+              className="w-full text-left bg-white/90 backdrop-blur-sm rounded-xl p-4 lg:p-5 border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-100 hover:bg-blue-50/30 transition-all cursor-pointer"
             >
               <div className="flex items-start justify-between mb-2">
                 <div className="flex-1 min-w-0">
@@ -509,7 +498,7 @@ function KnowledgeOverview({
                   style={{ width: `${kp.errorRate}%` }}
                 />
               </div>
-            </motion.button>
+            </button>
           ))}
         </div>
       </div>
@@ -560,11 +549,10 @@ function KnowledgeDetail({
           <h2 className="text-base font-semibold text-gray-800 mb-3">各班级掌握情况</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             {sortedClasses.map((cls) => (
-              <motion.button
+              <button
                 key={cls.className}
                 onClick={() => onSelectClass(cls)}
-                className="w-full text-left bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-100 transition-all"
-                whileTap={{ scale: 0.98 }}
+                className="w-full text-left bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-100 hover:bg-blue-50/30 transition-all cursor-pointer"
               >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
@@ -613,7 +601,7 @@ function KnowledgeDetail({
                   </div>
                   <span className="text-xs text-gray-400 ml-1">查看详情 →</span>
                 </div>
-              </motion.button>
+              </button>
             ))}
           </div>
         </div>
@@ -734,7 +722,7 @@ function ClassStudentDetail({
   );
 }
 
-/* ============ Bottom Sheet Filter (contained within mobile frame) ============ */
+/* ============ Filter Modal (PC) ============ */
 
 function FilterSheet({
   open,
@@ -770,86 +758,82 @@ function FilterSheet({
     onClose();
   };
 
+  if (!open) return null;
+
   return (
-    <AnimatePresence>
-      {open && (
-        <motion.div
-          key="filter-backdrop"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.15 }}
-          className="absolute inset-0 z-50"
-        >
-          {/* Backdrop */}
-          <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-
-          {/* Sheet */}
-          <motion.div
-            key="filter-sheet"
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={{ type: "spring", damping: 28, stiffness: 300, mass: 0.8 }}
-            className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl px-6 pt-6 pb-10 shadow-2xl"
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+      <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 pt-6 pb-2">
+          <h3 className="text-lg font-semibold text-gray-900">筛选条件</h3>
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors text-gray-400 hover:text-gray-600"
           >
-            {/* Handle */}
-            <div className="w-10 h-1 bg-gray-300 rounded-full mx-auto mb-5" />
+            <X className="w-5 h-5" />
+          </button>
+        </div>
 
-            {/* Title */}
-            <h3 className="text-base font-semibold text-gray-900 mb-5">筛选条件</h3>
-
-            {/* Class Filter */}
-            <div className="mb-5">
-              <label className="text-xs text-gray-500 mb-2 block">班级</label>
-              <div className="flex gap-2 flex-wrap">
-                {["全部班级", ...classes].map((cls) => (
-                  <button
-                    key={cls}
-                    onClick={() => setTempClass(cls)}
-                    className={`px-4 py-2.5 rounded-xl text-sm transition-all active:scale-95 ${
-                      tempClass === cls
-                        ? "bg-blue-600 text-white shadow-md shadow-blue-200"
-                        : "bg-gray-50 border border-gray-200 text-gray-600"
-                    }`}
-                  >
-                    {cls}
-                  </button>
-                ))}
-              </div>
+        <div className="px-6 py-4">
+          {/* Class Filter */}
+          <div className="mb-5">
+            <label className="text-sm text-gray-500 mb-2.5 block">班级</label>
+            <div className="flex gap-2 flex-wrap">
+              {["全部班级", ...classes].map((cls) => (
+                <button
+                  key={cls}
+                  onClick={() => setTempClass(cls)}
+                  className={`px-4 py-2 rounded-lg text-sm transition-all ${
+                    tempClass === cls
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : "bg-gray-50 border border-gray-200 text-gray-600 hover:bg-gray-100"
+                  }`}
+                >
+                  {cls}
+                </button>
+              ))}
             </div>
+          </div>
 
-            {/* Knowledge Filter */}
-            <div className="mb-6">
-              <label className="text-xs text-gray-500 mb-2 block">知识点</label>
-              <div className="flex gap-2 flex-wrap">
-                {knowledgeOptions.map((k) => (
-                  <button
-                    key={k}
-                    onClick={() => setTempKnowledge(k)}
-                    className={`px-4 py-2.5 rounded-xl text-sm transition-all active:scale-95 ${
-                      tempKnowledge === k
-                        ? "bg-blue-600 text-white shadow-md shadow-blue-200"
-                        : "bg-gray-50 border border-gray-200 text-gray-600"
-                    }`}
-                  >
-                    {k}
-                  </button>
-                ))}
-              </div>
+          {/* Knowledge Filter */}
+          <div className="mb-6">
+            <label className="text-sm text-gray-500 mb-2.5 block">知识点</label>
+            <div className="flex gap-2 flex-wrap">
+              {knowledgeOptions.map((k) => (
+                <button
+                  key={k}
+                  onClick={() => setTempKnowledge(k)}
+                  className={`px-4 py-2 rounded-lg text-sm transition-all ${
+                    tempKnowledge === k
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : "bg-gray-50 border border-gray-200 text-gray-600 hover:bg-gray-100"
+                  }`}
+                >
+                  {k}
+                </button>
+              ))}
             </div>
+          </div>
+        </div>
 
-            {/* Confirm */}
-            <button
-              onClick={handleConfirm}
-              className="w-full py-3.5 bg-blue-600 text-white rounded-xl text-sm font-medium active:scale-95 transition-transform shadow-lg shadow-blue-200/50"
-            >
-              确认
-            </button>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+        {/* Footer */}
+        <div className="flex gap-3 px-6 pb-6">
+          <button
+            onClick={onClose}
+            className="flex-1 py-2.5 text-sm text-gray-600 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors font-medium"
+          >
+            取消
+          </button>
+          <button
+            onClick={handleConfirm}
+            className="flex-1 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-medium hover:bg-blue-700 transition-colors shadow-sm"
+          >
+            确认
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -863,7 +847,6 @@ export default function ErrorBank() {
   const [filterOpen, setFilterOpen] = useState(false);
   const [classFilter, setClassFilter] = useState("全部班级");
   const [knowledgeFilter, setKnowledgeFilter] = useState("全部知识点");
-  const [direction, setDirection] = useState<"forward" | "back">("forward");
 
   const knowledgeOptions = ["全部知识点", ...mockKnowledgePoints.map((kp) => kp.name)];
 
@@ -875,24 +858,20 @@ export default function ErrorBank() {
   });
 
   const handleSelectKnowledge = useCallback((kp: KnowledgePoint) => {
-    setDirection("forward");
     setSelectedKp(kp);
     setView("knowledge");
   }, []);
 
   const handleSelectClass = useCallback((cls: ClassInfo) => {
-    setDirection("forward");
     setSelectedClassInfo(cls);
     setView("class");
   }, []);
 
   const handleBackToOverview = useCallback(() => {
-    setDirection("back");
     setView("overview");
   }, []);
 
   const handleBackToKnowledge = useCallback(() => {
-    setDirection("back");
     setView("knowledge");
   }, []);
 
@@ -960,73 +939,39 @@ export default function ErrorBank() {
         </div>
       </header>
 
-      {/* ===== Content Area (scrollable) ===== */}
+      {/* ===== Content Area ===== */}
       <main>
-        <AnimatePresence mode="wait">
-          {view === "overview" && (
-            <motion.div
-              key="overview"
-              variants={slideVariants}
-              initial={direction === "forward" ? "enter" : "exit"}
-              animate="center"
-              exit={direction === "forward" ? "exit" : "enter"}
-              transition={{ duration: 0.2, ease: "easeInOut" }}
-            >
-              <KnowledgeOverview
-                data={filteredData}
-                onSelectKnowledge={handleSelectKnowledge}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {view === "overview" && (
+          <KnowledgeOverview
+            data={filteredData}
+            onSelectKnowledge={handleSelectKnowledge}
+          />
+        )}
 
-        <AnimatePresence mode="wait">
-          {view === "knowledge" && selectedKp && (
-            <motion.div
-              key="knowledge"
-              variants={slideVariants}
-              initial={direction === "forward" ? "enter" : "exit"}
-              animate="center"
-              exit={direction === "forward" ? "exit" : "enter"}
-              transition={{ duration: 0.2, ease: "easeInOut" }}
-            >
-              <KnowledgeDetail
-                kp={selectedKp}
-                onBack={handleBackToOverview}
-                onSelectClass={handleSelectClass}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {view === "knowledge" && selectedKp && (
+          <KnowledgeDetail
+            kp={selectedKp}
+            onBack={handleBackToOverview}
+            onSelectClass={handleSelectClass}
+          />
+        )}
 
-        <AnimatePresence mode="wait">
-          {view === "class" && selectedKp && selectedClassInfo && (
-            <motion.div
-              key="class"
-              variants={slideVariants}
-              initial={direction === "forward" ? "enter" : "exit"}
-              animate="center"
-              exit={direction === "forward" ? "exit" : "enter"}
-              transition={{ duration: 0.2, ease: "easeInOut" }}
-            >
-              <ClassStudentDetail
-                kpName={selectedKp.name}
-                classInfo={selectedClassInfo}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {view === "class" && selectedKp && selectedClassInfo && (
+          <ClassStudentDetail
+            kpName={selectedKp.name}
+            classInfo={selectedClassInfo}
+          />
+        )}
 
-        {/* Bottom spacer so content isn't hidden behind the action bar */}
         <div className="h-4" />
       </main>
 
-      {/* ===== Bottom Action Bar (inside phone frame) ===== */}
-      <div className="bg-gradient-to-t from-white via-white/95 to-transparent">
-        <div className="max-w-6xl mx-auto px-4 lg:px-8 pb-8 pt-4">
+      {/* ===== Bottom Action Bar ===== */}
+      <div className="border-t border-gray-100 bg-white">
+        <div className="max-w-6xl mx-auto px-4 lg:px-8 py-4">
           <button
             onClick={view === "overview" ? handleGeneratePaper : handleGeneratePaperForKp}
-            className="w-full py-3.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-sm font-semibold rounded-2xl shadow-lg shadow-blue-200/50 active:scale-95 transition-transform flex items-center justify-center gap-2"
+            className="w-full py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md hover:from-blue-600 hover:to-indigo-700 transition-all flex items-center justify-center gap-2"
           >
             <BrainCircuit className="w-4 h-4" />
             {view === "overview"
