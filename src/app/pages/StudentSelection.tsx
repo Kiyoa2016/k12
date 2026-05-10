@@ -56,7 +56,7 @@ export default function StudentSelection() {
     if (gradingStarted) return;
     setSelectedStudent(id);
     setTimeout(() => {
-      navigate(`/camera?mode=homework&studentId=${id}`);
+      navigate(`/app/camera?mode=homework&studentId=${id}`);
     }, 300);
   };
 
@@ -65,7 +65,7 @@ export default function StudentSelection() {
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-lg shadow-sm shrink-0 pt-8">
         <div className="px-4 py-3 flex items-center gap-3">
-          <Link to="/homework-upload">
+          <Link to="/app/homework-upload">
             <div className="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center active:scale-90 transition-transform">
               <ArrowLeft className="w-5 h-5 text-blue-700" />
             </div>
@@ -226,7 +226,7 @@ export default function StudentSelection() {
                 key={student.id}
                 onClick={() => {
                   if (isRecordsMode && isGraded) {
-                    navigate(`/grading-result/${student.id}`);
+                    navigate(`/app/grading-result/${student.id}`);
                   } else if (!gradingStarted && !isRecordsMode) {
                     selectStudent(student.id);
                   }

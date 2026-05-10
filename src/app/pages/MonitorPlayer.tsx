@@ -52,7 +52,7 @@ export default function MonitorPlayer() {
       <header className="bg-black/50 backdrop-blur z-10 pt-8">
         <div className="px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <Link to="/monitor-list">
+            <Link to="/app/monitor-list">
               <ArrowLeft className="w-6 h-6 text-white" />
             </Link>
             <h1 className="text-base text-white">{className}</h1>

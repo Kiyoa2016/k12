@@ -41,7 +41,7 @@ export default function MonitorList() {
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-10 pt-8">
         <div className="px-4 py-3 flex items-center gap-3">
-          <Link to="/">
+          <Link to="/app">
             <div className="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center active:scale-90 transition-transform">
               <ArrowLeft className="w-5 h-5 text-blue-700" />
             </div>
@@ -62,7 +62,7 @@ export default function MonitorList() {
               {recentViews.map((item) => (
                 <div
                   key={item.id}
-                  onClick={() => navigate(`/monitor-player/${item.id}`)}
+                  onClick={() => navigate(`/app/monitor-player/${item.id}`)}
                   className="group bg-white/80 backdrop-blur-sm rounded-xl p-3 shadow-lg shadow-blue-100/50 cursor-pointer active:scale-95 transition-all border border-blue-50/50"
                 >
                   <div className="aspect-video bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg mb-2 flex items-center justify-center relative overflow-hidden">
@@ -99,7 +99,7 @@ export default function MonitorList() {
                   key={classItem.id}
                   onClick={() => {
                     if (classItem.status === "online") {
-                      navigate(`/monitor-player/${classItem.id}`);
+                      navigate(`/app/monitor-player/${classItem.id}`);
                     }
                   }}
                   className={`px-4 py-3 flex items-center justify-between ${

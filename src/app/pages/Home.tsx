@@ -17,14 +17,14 @@ export default function Home() {
       description: "AI智能批改",
       icon: Camera,
       gradient: "from-blue-500 to-indigo-600",
-      link: "/homework-upload",
+      link: "/app/homework-upload",
     },
     {
       title: "掌上看班",
       description: "实时监控",
       icon: Video,
       gradient: "from-blue-600 to-violet-600",
-      link: "/monitor-list",
+      link: "/app/monitor-list",
     },
   ];
 
@@ -39,7 +39,7 @@ export default function Home() {
               </div>
               <h1 className="text-lg text-gray-900">K12教师助手</h1>
             </div>
-            <Link to="/profile">
+            <Link to="/app/profile">
               <div className="w-9 h-9 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center">
                 <User className="w-5 h-5 text-blue-700" />
               </div>

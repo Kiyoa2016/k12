@@ -72,7 +72,7 @@ export default function Profile() {
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-lg shadow-sm pt-8">
         <div className="px-4 py-3 flex items-center gap-3">
-          <Link to="/">
+          <Link to="/app">
             <div className="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center active:scale-90 transition-transform">
               <ArrowLeft className="w-5 h-5 text-blue-700" />
             </div>

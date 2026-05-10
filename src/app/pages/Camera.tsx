@@ -11,7 +11,7 @@ export default function Camera() {
   const [isProcessing, setIsProcessing] = useState(false);
 
   // 根据mode决定返回路径
-  const backPath = mode === "homework" ? "/student-selection" : "/homework-upload";
+  const backPath = mode === "homework" ? "/app/student-selection" : "/app/homework-upload";
   const studentId = searchParams.get("studentId");
 
   const handleCapture = () => {
@@ -22,7 +22,7 @@ export default function Camera() {
   const handleSubmit = () => {
     setIsProcessing(true);
     setTimeout(() => {
-      navigate("/student-selection", {
+      navigate("/app/student-selection", {
         state: { uploadedStudentId: studentId ? parseInt(studentId) : undefined },
       });
     }, 2000);

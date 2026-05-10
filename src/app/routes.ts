@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router";
 import MobileLayout from "./layouts/MobileLayout";
 import ConsoleLayout from "./layouts/ConsoleLayout";
+import LandingPage from "./pages/LandingPage";
 import Home from "./pages/Home";
 import ConsoleHome from "./pages/ConsoleHome";
 import HomeworkUpload from "./pages/HomeworkUpload";
@@ -24,6 +25,11 @@ import ShareManage from "./pages/ShareManage";
 
 export const router = createBrowserRouter([
   {
+    index: true,
+    Component: LandingPage,
+  },
+  {
+    path: "app",
     Component: MobileLayout,
     children: [
       { index: true, Component: Home },
