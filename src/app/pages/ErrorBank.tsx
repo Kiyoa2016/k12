@@ -419,20 +419,20 @@ function KnowledgeOverview({
   return (
     <div className="px-4 lg:px-8">
       <div className="max-w-6xl mx-auto">
-        {/* Summary Stats */}
+        {/* Summary Stats — flatter */}
         <div className="pt-4 pb-4">
           <div className="grid grid-cols-3 gap-4 lg:gap-6">
-            <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-blue-100 shadow-sm">
+            <div className="bg-white rounded-lg p-4 border border-gray-100">
               <BookOpen className="w-5 h-5 text-blue-600 mb-1.5" />
               <div className="text-xl font-bold text-blue-900">{data.length}</div>
               <div className="text-xs text-gray-500">薄弱知识点</div>
             </div>
-            <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-orange-100 shadow-sm">
+            <div className="bg-white rounded-lg p-4 border border-gray-100">
               <AlertTriangle className="w-5 h-5 text-orange-600 mb-1.5" />
               <div className="text-xl font-bold text-orange-900">{highFreq}</div>
               <div className="text-xs text-gray-500">高频(≥30%)</div>
             </div>
-            <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-indigo-100 shadow-sm">
+            <div className="bg-white rounded-lg p-4 border border-gray-100">
               <FileText className="w-5 h-5 text-indigo-600 mb-1.5" />
               <div className="text-xl font-bold text-indigo-900">{totalErrors}</div>
               <div className="text-xs text-gray-500">错题总数</div>
@@ -440,66 +440,53 @@ function KnowledgeOverview({
           </div>
         </div>
 
-        {/* Knowledge Point Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-          <div className="flex items-center justify-between col-span-full">
+        {/* Knowledge Point Table */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
             <h2 className="text-base font-semibold text-gray-800">知识点掌握情况</h2>
             <span className="text-xs text-gray-400">按错误率排序</span>
           </div>
-          {data.map((kp) => (
-            <button
-              key={kp.id}
-              onClick={() => onSelectKnowledge(kp)}
-              className="w-full text-left bg-white/90 backdrop-blur-sm rounded-xl p-4 lg:p-5 border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-100 hover:bg-blue-50/30 transition-all cursor-pointer"
-            >
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5 mb-1.5">
-                    <span className={`px-2 py-0.5 rounded text-[10px] font-medium text-white ${
-                      kp.subject === "数学" ? "bg-blue-500" :
-                      kp.subject === "语文" ? "bg-emerald-500" : "bg-purple-500"
-                    }`}>
-                      {kp.subject}
-                    </span>
-                  </div>
-                  <h3 className="text-sm lg:text-base font-semibold text-gray-900">{kp.name}</h3>
+          <div className="bg-white rounded-lg border border-gray-100 divide-y divide-gray-50">
+            {data.map((kp) => (
+              <button
+                key={kp.id}
+                onClick={() => onSelectKnowledge(kp)}
+                className="w-full text-left px-4 py-3 hover:bg-blue-50/50 transition-colors flex items-center gap-4 cursor-pointer group"
+              >
+                <div className="flex items-center gap-2 min-w-[120px] shrink-0">
+                  <span className={`px-2 py-0.5 rounded text-[11px] font-medium text-white ${
+                    kp.subject === "数学" ? "bg-blue-500" :
+                    kp.subject === "语文" ? "bg-emerald-500" : "bg-purple-500"
+                  }`}>
+                    {kp.subject}
+                  </span>
+                  <span className="text-sm font-medium text-gray-900">{kp.name}</span>
                 </div>
-                <ChevronRight className="w-5 h-5 text-gray-300 mt-1 shrink-0" />
-              </div>
-              {/* Metrics Row */}
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1">
-                  <div
-                    className={`text-sm lg:text-base font-bold ${
+                <div className="flex-1 flex items-center gap-4">
+                  <div className="flex items-center gap-2 flex-1">
+                    <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden max-w-[120px]">
+                      <div
+                        className={`h-full rounded-full ${
+                          kp.errorRate >= 40 ? "bg-red-400" :
+                          kp.errorRate >= 25 ? "bg-orange-400" : "bg-yellow-400"
+                        }`}
+                        style={{ width: `${kp.errorRate}%` }}
+                      />
+                    </div>
+                    <span className={`text-xs font-semibold w-8 text-right ${
                       kp.errorRate >= 40 ? "text-red-600" :
                       kp.errorRate >= 25 ? "text-orange-600" : "text-yellow-600"
-                    }`}
-                  >
-                    {kp.errorRate}%
+                    }`}>{kp.errorRate}%</span>
                   </div>
-                  <span className="text-xs text-gray-400">错误率</span>
+                  <div className="flex items-center gap-3 text-xs text-gray-500 shrink-0">
+                    <span>{kp.classCount}个班</span>
+                    <span>{kp.totalErrors}道错题</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-1 text-gray-500">
-                  <Users className="w-3.5 h-3.5" />
-                  <span className="text-xs">{kp.classCount}个班</span>
-                </div>
-                <div className="flex items-center gap-1 text-gray-500">
-                  <AlertTriangle className="w-3.5 h-3.5" />
-                  <span className="text-xs">{kp.totalErrors}道错题</span>
-                </div>
-              </div>
-              {/* Progress bar */}
-              <div className="mt-3 h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div
-                  className={`h-full rounded-full ${
-                    kp.errorRate >= 40 ? "bg-red-400" :
-                    kp.errorRate >= 25 ? "bg-orange-400" : "bg-yellow-400"
-                  }`}
-                  style={{ width: `${kp.errorRate}%` }}
-                />
-              </div>
-            </button>
-          ))}
+                <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 transition-colors shrink-0" />
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -522,9 +509,9 @@ function KnowledgeDetail({
   return (
     <div className="px-4 lg:px-8">
       <div className="max-w-6xl mx-auto">
-        {/* Overview Stats */}
+        {/* Overview Stats — flatter */}
         <div className="pt-4 pb-4">
-          <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 lg:p-5 border border-blue-100 shadow-sm">
+          <div className="bg-white rounded-lg p-4 border border-gray-100">
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
                 <div className={`text-xl lg:text-2xl font-bold ${kp.errorRate >= 40 ? "text-red-600" : kp.errorRate >= 25 ? "text-orange-600" : "text-yellow-600"}`}>
@@ -544,46 +531,43 @@ function KnowledgeDetail({
           </div>
         </div>
 
-        {/* Class Comparison */}
-        <div className="mb-4">
+        {/* Class Comparison — table style */}
+        <div className="mb-6">
           <h2 className="text-base font-semibold text-gray-800 mb-3">各班级掌握情况</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          <div className="bg-white rounded-lg border border-gray-100 divide-y divide-gray-50">
             {sortedClasses.map((cls) => (
               <button
                 key={cls.className}
                 onClick={() => onSelectClass(cls)}
-                className="w-full text-left bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-100 hover:bg-blue-50/30 transition-all cursor-pointer"
+                className="w-full text-left px-4 py-3 hover:bg-blue-50/50 transition-colors flex items-center gap-4 cursor-pointer group"
               >
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <GraduationCap className="w-4 h-4 text-blue-600" />
-                    <span className="text-sm lg:text-base font-medium text-gray-900">{cls.className}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className={`text-sm lg:text-base font-bold ${
+                <div className="flex items-center gap-2 min-w-[120px] shrink-0">
+                  <GraduationCap className="w-4 h-4 text-blue-600" />
+                  <span className="text-sm font-medium text-gray-900">{cls.className}</span>
+                </div>
+                <div className="flex-1 flex items-center gap-4">
+                  <div className="flex items-center gap-2 flex-1 max-w-[200px]">
+                    <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full rounded-full ${
+                          cls.errorRate >= 35 ? "bg-red-400" :
+                          cls.errorRate >= 20 ? "bg-orange-400" : "bg-green-400"
+                        }`}
+                        style={{ width: `${cls.errorRate}%` }}
+                      />
+                    </div>
+                    <span className={`text-xs font-semibold ${
                       cls.errorRate >= 35 ? "text-red-600" :
                       cls.errorRate >= 20 ? "text-orange-600" : "text-green-600"
-                    }`}>
-                      {cls.errorRate}%
-                    </span>
-                    <ChevronRight className="w-4 h-4 text-gray-300" />
+                    }`}>{cls.errorRate}%</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-xs text-gray-500 shrink-0">
+                    <span>{cls.errorCount}道错题</span>
+                    <span>{cls.students.length}人出错</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 text-xs lg:text-sm text-gray-500 mb-2">
-                  <span>{cls.errorCount}道错题</span>
-                  <span>{cls.students.length}人出错</span>
-                </div>
-                <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                  <div
-                    className={`h-full rounded-full ${
-                      cls.errorRate >= 35 ? "bg-red-400" :
-                      cls.errorRate >= 20 ? "bg-orange-400" : "bg-green-400"
-                    }`}
-                    style={{ width: `${cls.errorRate}%` }}
-                  />
-                </div>
                 {/* Student Avatars Preview */}
-                <div className="mt-2.5 flex items-center gap-1">
+                <div className="flex items-center gap-1 shrink-0">
                   <div className="flex -space-x-1.5">
                     {cls.students.slice(0, 4).map((s) => (
                       <div
@@ -599,7 +583,7 @@ function KnowledgeDetail({
                       </div>
                     )}
                   </div>
-                  <span className="text-xs text-gray-400 ml-1">查看详情 →</span>
+                  <ChevronRight className="w-3.5 h-3.5 text-gray-300 group-hover:text-gray-500 transition-colors ml-1" />
                 </div>
               </button>
             ))}
@@ -609,29 +593,24 @@ function KnowledgeDetail({
         {/* Related Error Questions */}
         <div>
           <h2 className="text-base font-semibold text-gray-800 mb-3">关联错题</h2>
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+          <div className="bg-white rounded-lg border border-gray-100 divide-y divide-gray-50">
             {kp.questions.map((q) => (
-              <div
-                key={q.id}
-                className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-gray-100 shadow-sm"
-              >
-                <div className="flex items-center gap-1.5 mb-2">
-                  <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-[10px] rounded">{q.type}</span>
+              <div key={q.id} className="px-4 py-3 flex items-center gap-4">
+                <div className="flex items-center gap-2 min-w-[60px] shrink-0">
+                  <span className="px-2 py-0.5 bg-blue-50 text-blue-700 text-[11px] rounded">{q.type}</span>
                   <DifficultyDots level={q.difficulty} />
                 </div>
-                <div className="text-sm lg:text-base text-gray-900 mb-2">{q.content}</div>
-                <div className="flex items-center justify-between text-xs text-gray-500">
-                  <div className="flex items-center gap-2">
-                    <span className="text-red-600 font-medium">{q.errorRate}%错误率</span>
-                    <span>{q.errorCount}人出错</span>
-                  </div>
-                  <div className="flex -space-x-1">
-                    {q.students.slice(0, 3).map((s) => (
-                      <span key={s} className="text-xs px-1.5 py-0.5 bg-red-50 text-red-600 rounded-full border border-white">
-                        {s}
-                      </span>
-                    ))}
-                  </div>
+                <div className="flex-1 text-sm text-gray-900">{q.content}</div>
+                <div className="flex items-center gap-3 text-xs text-gray-500 shrink-0">
+                  <span className={`font-medium ${q.errorRate >= 40 ? "text-red-600" : "text-orange-600"}`}>{q.errorRate}%</span>
+                  <span>{q.errorCount}人</span>
+                </div>
+                <div className="flex -space-x-1 shrink-0">
+                  {q.students.slice(0, 3).map((s) => (
+                    <span key={s} className="text-[11px] px-1.5 py-0.5 bg-red-50 text-red-600 rounded-full border border-white">
+                      {s}
+                    </span>
+                  ))}
                 </div>
               </div>
             ))}
@@ -656,9 +635,9 @@ function ClassStudentDetail({
   return (
     <div className="px-4 lg:px-8">
       <div className="max-w-6xl mx-auto">
-        {/* Class Stats */}
+        {/* Class Stats — flatter */}
         <div className="pt-4 pb-4">
-          <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 lg:p-5 border border-orange-100 shadow-sm">
+          <div className="bg-white rounded-lg p-4 border border-gray-100">
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
                 <div className="text-xl lg:text-2xl font-bold text-orange-600">{classInfo.errorRate}%</div>
@@ -676,26 +655,19 @@ function ClassStudentDetail({
           </div>
         </div>
 
-        {/* Student List */}
+        {/* Student List — table style */}
         <div>
           <h2 className="text-base font-semibold text-gray-800 mb-3">出错学生</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div className="bg-white rounded-lg border border-gray-100 divide-y divide-gray-50">
             {sortedStudents.map((student) => (
-              <div
-                key={student.name}
-                className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-gray-100 shadow-sm"
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-orange-400 to-red-400 flex items-center justify-center">
-                      <span className="text-sm font-bold text-white">{student.name[0]}</span>
-                    </div>
-                    <div>
-                      <span className="text-sm font-medium text-gray-900">{student.name}</span>
-                      <span className="text-xs text-gray-500 ml-2">出错{student.errorCount}次</span>
-                    </div>
-                  </div>
-                  <div className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${
+              <div key={student.name} className="px-4 py-3 flex items-center gap-4">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-400 to-red-400 flex items-center justify-center shrink-0">
+                  <span className="text-xs font-bold text-white">{student.name[0]}</span>
+                </div>
+                <div className="flex-1 flex items-center gap-4">
+                  <span className="text-sm font-medium text-gray-900 min-w-[60px]">{student.name}</span>
+                  <span className="text-xs text-gray-500">出错{student.errorCount}次</span>
+                  <div className={`px-2 py-0.5 rounded text-[11px] font-medium ${
                     student.errorCount >= 4 ? "bg-red-50 text-red-600" :
                     student.errorCount >= 3 ? "bg-orange-50 text-orange-600" : "bg-yellow-50 text-yellow-700"
                   }`}>
@@ -704,14 +676,13 @@ function ClassStudentDetail({
                   </div>
                 </div>
                 {/* Recent errors */}
-                <div className="px-3 py-2.5 bg-gradient-to-r from-orange-50 to-red-50 rounded-lg border border-orange-100">
-                  <div className="text-[10px] text-orange-700 mb-1">近期错题：</div>
-                  {student.recentErrors.map((err, i) => (
-                    <div key={i} className="text-xs text-gray-700 flex items-center gap-1">
-                      <span className="w-1 h-1 rounded-full bg-orange-400 shrink-0" />
-                      {err}
-                    </div>
+                <div className="flex items-center gap-2 text-xs text-gray-600">
+                  {student.recentErrors.slice(0, 2).map((err, i) => (
+                    <span key={i} className="px-2 py-0.5 bg-orange-50 text-orange-700 rounded">{err}</span>
                   ))}
+                  {student.recentErrors.length > 2 && (
+                    <span className="text-gray-400">+{student.recentErrors.length - 2}</span>
+                  )}
                 </div>
               </div>
             ))}
@@ -968,10 +939,10 @@ export default function ErrorBank() {
 
       {/* ===== Bottom Action Bar ===== */}
       <div className="border-t border-gray-100 bg-white">
-        <div className="max-w-6xl mx-auto px-4 lg:px-8 py-4">
+        <div className="max-w-6xl mx-auto px-4 lg:px-8 py-4 flex justify-end">
           <button
             onClick={view === "overview" ? handleGeneratePaper : handleGeneratePaperForKp}
-            className="w-full py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md hover:from-blue-600 hover:to-indigo-700 transition-all flex items-center justify-center gap-2"
+            className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-sm font-semibold rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all flex items-center gap-2 shadow-sm"
           >
             <BrainCircuit className="w-4 h-4" />
             {view === "overview"
