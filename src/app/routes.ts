@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router";
 import MobileLayout from "./layouts/MobileLayout";
 import ConsoleLayout from "./layouts/ConsoleLayout";
 import Home from "./pages/Home";
+import ConsoleHome from "./pages/ConsoleHome";
 import HomeworkUpload from "./pages/HomeworkUpload";
 import StudentSelection from "./pages/StudentSelection";
 import Camera from "./pages/Camera";
@@ -40,7 +41,7 @@ export const router = createBrowserRouter([
     path: "console",
     Component: ConsoleLayout,
     children: [
-      { index: true, Component: Home }, // placeholder, will be replaced by ConsoleHome in Task 3
+      { index: true, Component: ConsoleHome },
       { path: "error-bank", Component: ErrorBank },
       { path: "paper-config", Component: PaperConfig },
       { path: "paper-preview", Component: PaperPreview },
