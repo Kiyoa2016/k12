@@ -165,7 +165,7 @@ export default function HomeworkUpload() {
       {/* Bottom Buttons */}
       <div className="shrink-0 px-4 pb-[30px] pt-3 bg-gradient-to-t from-white via-white to-transparent flex gap-3">
         <button
-          onClick={() => navigate("/student-selection", { state: { mode: "records" } })}
+          onClick={() => navigate("/app/student-selection", { state: { mode: "records" } })}
           className="flex-1 py-3.5 text-sm text-indigo-600 bg-white border border-indigo-200 rounded-2xl flex items-center justify-center gap-2 active:scale-[0.98] transition-all shadow-sm font-medium"
         >
           <History className="w-5 h-5" />

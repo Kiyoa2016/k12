@@ -878,7 +878,7 @@ export default function ErrorBank() {
             <div className="flex items-center gap-4 min-w-0 flex-1">
               {view === "overview" ? (
                 <button
-                  onClick={() => navigate("/")}
+                  onClick={() => navigate("/console")}
                   className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center hover:bg-blue-100 transition-colors shrink-0"
                 >
                   <ArrowLeft className="w-5 h-5 text-blue-700" />
