@@ -62,7 +62,7 @@ export default function ReportList() {
       <header className="bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-10 pt-8">
         <div className="px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link to="/">
+            <Link to="/console">
               <div className="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center active:scale-90 transition-transform">
                 <ArrowLeft className="w-5 h-5 text-blue-700" />
               </div>
@@ -162,7 +162,7 @@ export default function ReportList() {
 
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => navigate(`/report-detail/${report.id}`)}
+                      onClick={() => navigate(`/console/report-detail/${report.id}`)}
                       disabled={report.status !== "completed"}
                       className="px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 disabled:from-gray-300 disabled:to-gray-300 text-white text-xs rounded-lg shadow-sm active:scale-95 transition-transform disabled:cursor-not-allowed"
                     >
@@ -197,7 +197,7 @@ export default function ReportList() {
       {/* Floating Action Button */}
       <div className="fixed bottom-6 right-4 z-20">
         <button
-          onClick={() => navigate("/analysis-config")}
+          onClick={() => navigate("/console/analysis-config")}
           className="group w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-2xl shadow-blue-300/50 active:scale-95 transition-all"
         >
           <Plus className="w-7 h-7 text-white" />

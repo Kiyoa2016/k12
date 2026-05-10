@@ -34,7 +34,7 @@ export default function PaperConfig() {
   };
 
   const handleGenerate = () => {
-    navigate("/paper-preview");
+    navigate("/console/paper-preview");
   };
 
   return (
@@ -42,7 +42,7 @@ export default function PaperConfig() {
       {/* Header */}
       <header className="bg-white shadow-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center gap-3">
-          <Link to="/error-bank">
+          <Link to="/console/error-bank">
             <ArrowLeft className="w-6 h-6 text-gray-600" />
           </Link>
           <h1 className="text-xl text-gray-900">智能组卷</h1>

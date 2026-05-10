@@ -897,11 +897,11 @@ export default function ErrorBank() {
   }, []);
 
   const handleGeneratePaper = useCallback(() => {
-    navigate("/paper-config");
+    navigate("/console/paper-config");
   }, [navigate]);
 
   const handleGeneratePaperForKp = useCallback(() => {
-    navigate(`/paper-config?knowledge=${selectedKp?.id}`);
+    navigate(`/console/paper-config?knowledge=${selectedKp?.id}`);
   }, [navigate, selectedKp]);
 
   // Title for each view's header bar
