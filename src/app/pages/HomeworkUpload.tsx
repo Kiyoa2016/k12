@@ -1,39 +1,39 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
 import { Link, useNavigate } from "react-router";
-import { ArrowLeft, FileText, CheckCircle2, Clock, Users, TrendingUp, ChevronDown } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Clock, Users, TrendingUp, ChevronDown } from "lucide-react";
 
 export default function HomeworkUpload() {
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
-  const [homeworkTitle, setHomeworkTitle] = useState("");
-  const [selectedClass, setSelectedClass] = useState("");
   const [selectedTopic, setSelectedTopic] = useState("第三单元练习题");
   const [showTopicPicker, setShowTopicPicker] = useState(false);
-  const [showTopicSheet, setShowTopicSheet] = useState(false);
 
-  const classes = ["三年级1班", "三年级2班", "四年级1班", "四年级2班"];
   const homeworkTopics = ["第三单元练习题", "第二单元测验", "期中考试试卷", "第一单元复习题", "周末作业-数学"];
 
-  const recentTopics = [
-    "第三单元练习题",
-    "第二单元测验",
-    "期中考试试卷",
-  ];
-
-  const handleUpload = () => {
-    if (homeworkTitle.trim() && selectedClass) {
-      setShowModal(false);
-      navigate("/app/student-selection", { state: { selectedTopic: homeworkTitle.trim(), selectedClass } });
-    }
+  // 模拟作业主题与班级的关联关系（同年级不同班）
+  const topicClassMap: Record<string, { id: number; name: string; total: number; submitted: number; graded: number; accuracy: number }[]> = {
+    "第三单元练习题": [
+      { id: 1, name: "三年级1班", total: 45, submitted: 42, graded: 40, accuracy: 78 },
+      { id: 2, name: "三年级2班", total: 44, submitted: 0, graded: 0, accuracy: 0 },
+    ],
+    "第二单元测验": [
+      { id: 1, name: "三年级1班", total: 45, submitted: 30, graded: 28, accuracy: 65 },
+      { id: 2, name: "三年级2班", total: 44, submitted: 35, graded: 30, accuracy: 70 },
+    ],
+    "期中考试试卷": [
+      { id: 3, name: "四年级1班", total: 46, submitted: 46, graded: 44, accuracy: 85 },
+      { id: 4, name: "四年级2班", total: 43, submitted: 30, graded: 25, accuracy: 65 },
+    ],
+    "第一单元复习题": [
+      { id: 1, name: "三年级1班", total: 45, submitted: 20, graded: 18, accuracy: 82 },
+      { id: 2, name: "三年级2班", total: 44, submitted: 15, graded: 12, accuracy: 60 },
+    ],
+    "周末作业-数学": [
+      { id: 3, name: "四年级1班", total: 46, submitted: 0, graded: 0, accuracy: 0 },
+      { id: 4, name: "四年级2班", total: 43, submitted: 0, graded: 0, accuracy: 0 },
+    ],
   };
 
-  const classStats = [
-    { id: 1, name: "三年级1班", total: 45, submitted: 42, graded: 40, accuracy: 78 },
-    { id: 2, name: "三年级2班", total: 44, submitted: 38, graded: 35, accuracy: 72 },
-    { id: 3, name: "四年级1班", total: 46, submitted: 46, graded: 44, accuracy: 85 },
-    { id: 4, name: "四年级2班", total: 43, submitted: 30, graded: 25, accuracy: 65 },
-  ];
+  const classStats = topicClassMap[selectedTopic] ?? topicClassMap[homeworkTopics[0]]!;
 
   const overallTotal = classStats.reduce((s, c) => s + c.total, 0);
   const overallSubmitted = classStats.reduce((s, c) => s + c.submitted, 0);
@@ -73,7 +73,7 @@ export default function HomeworkUpload() {
           <div className="relative">
             <div className="flex items-center gap-2 mb-3">
               <TrendingUp className="w-4 h-4 text-white/90" />
-              <span className="text-xs text-white/80">今日作业完成概况</span>
+              <span className="text-xs text-white/80">作业完成概况</span>
             </div>
             <div className="flex items-end gap-2 mb-3">
               <span className="text-3xl font-bold text-white">{overallRate}%</span>
@@ -96,18 +96,23 @@ export default function HomeworkUpload() {
         <div className="space-y-3 mb-4">
           <div className="flex items-center gap-2 px-1">
             <Users className="w-4 h-4 text-indigo-600" />
-            <h2 className="text-sm font-semibold text-gray-800">班级横向对比</h2>
+            <h2 className="text-sm font-semibold text-gray-800">班级列表</h2>
           </div>
 
           {classStats.map((cls) => {
             const submissionRate = Math.round((cls.submitted / cls.total) * 100);
-            const gradingRate = Math.round((cls.graded / cls.submitted) * 100);
             return (
               <div
                 key={cls.id}
                 onClick={() => navigate("/app/student-selection", { state: { selectedClass: cls.name, selectedTopic } })}
-                className="bg-white rounded-2xl p-4 active:scale-[0.98] transition-all cursor-pointer shadow-sm border border-blue-50/50"
+                className="bg-white rounded-2xl p-4 active:scale-[0.98] transition-all cursor-pointer shadow-sm border border-blue-50/50 relative"
               >
+                {/* 待上传角标 */}
+                {cls.submitted === 0 && (
+                  <div className="absolute -top-1 -right-1 px-2.5 py-1 bg-red-500 text-white text-[10px] font-medium rounded-bl-lg rounded-tr-lg shadow-sm">
+                    待上传
+                  </div>
+                )}
                 {/* Class Header */}
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2.5">
@@ -116,6 +121,7 @@ export default function HomeworkUpload() {
                     </div>
                     <span className="text-sm font-semibold text-gray-900">{cls.name}</span>
                   </div>
+                  {cls.submitted > 0 && (
                   <div className={`px-2.5 py-1 rounded-lg text-xs font-medium ${
                     submissionRate >= 90 ? "bg-green-100 text-green-700" :
                     submissionRate >= 70 ? "bg-orange-100 text-orange-700" :
@@ -123,9 +129,20 @@ export default function HomeworkUpload() {
                   }`}>
                     {submissionRate}%
                   </div>
+                  )}
                 </div>
 
-                {/* Submission Progress Bar */}
+                {cls.submitted === 0 ? (
+                  <div className="mb-3">
+                    <div className="flex items-center justify-between text-xs text-gray-500 mb-1.5">
+                      <span>提交进度</span>
+                      <span>0/{cls.total} 人</span>
+                    </div>
+                    <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="h-full rounded-full bg-gray-200" style={{ width: "100%" }} />
+                    </div>
+                  </div>
+                ) : (
                 <div className="mb-3">
                   <div className="flex items-center justify-between text-xs text-gray-500 mb-1.5">
                     <span>提交进度</span>
@@ -142,6 +159,7 @@ export default function HomeworkUpload() {
                     />
                   </div>
                 </div>
+                )}
 
                 {/* Stats Row */}
                 <div className="flex items-center gap-4 text-xs">
@@ -153,23 +171,17 @@ export default function HomeworkUpload() {
                     <Clock className="w-3.5 h-3.5 text-orange-500" />
                     <span>待批改 <strong className="text-gray-700">{cls.submitted - cls.graded}</strong></span>
                   </div>
+                  {cls.submitted > 0 && (
                   <div className="flex items-center gap-1.5 text-gray-500 ml-auto">
                     正确率 <strong className={cls.accuracy >= 60 ? "text-green-600" : "text-red-600"}>{cls.accuracy}%</strong>
                   </div>
+                  )}
                 </div>
               </div>
             );
           })}
         </div>
       </main>
-
-      {/* FAB — 快速新建批改 */}
-      <button
-        onClick={() => setShowModal(true)}
-        className="fixed bottom-[100px] right-5 w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl shadow-indigo-300/60 active:scale-90 transition-transform z-40"
-      >
-        <FileText className="w-6 h-6 text-white" />
-      </button>
 
       {/* Topic Picker Bottom Sheet */}
       {showTopicPicker && (
@@ -208,128 +220,6 @@ export default function HomeworkUpload() {
         </div>
       )}
 
-      {/* Mobile Bottom Sheet Modal */}
-      <AnimatePresence>
-        {showModal && (
-          <motion.div
-            key="modal-backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            className="absolute inset-0 z-50"
-          >
-            {/* Backdrop */}
-            <div className="absolute inset-0 bg-black/40" onClick={() => setShowModal(false)} />
-
-            {/* Sheet */}
-            <motion.div
-              key="modal-sheet"
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 28, stiffness: 300, mass: 0.8 }}
-              className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl px-6 pt-6 pb-10 shadow-2xl"
-            >
-              {/* Handle */}
-              <div className="w-10 h-1 bg-gray-300 rounded-full mx-auto mb-5" />
-
-              {/* Title */}
-              <h3 className="text-base font-semibold text-gray-900 mb-5">新建批改</h3>
-
-              {/* Topic Dropdown */}
-              <div className="mb-5">
-                <label className="text-xs text-gray-500 mb-2 block">作业主题</label>
-                <button
-                  type="button"
-                  onClick={() => setShowTopicSheet(true)}
-                  className="w-full flex items-center justify-between px-4 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl text-gray-900 active:scale-[0.99] transition-all"
-                >
-                  <span className={homeworkTitle ? "text-gray-900" : "text-gray-400"}>
-                    {homeworkTitle || "请选择作业主题"}
-                  </span>
-                  <ChevronDown className="w-4 h-4 text-gray-400" />
-                </button>
-              </div>
-
-              {/* Class Selection */}
-              <div className="mb-6">
-                <label className="text-xs text-gray-500 mb-2 block">选择班级</label>
-                <div className="flex gap-2 flex-wrap">
-                  {classes.map((cls) => (
-                    <button
-                      key={cls}
-                      type="button"
-                      onClick={() => setSelectedClass(cls === selectedClass ? "" : cls)}
-                      className={`px-4 py-2.5 text-sm rounded-xl transition-all active:scale-95 ${
-                        selectedClass === cls
-                          ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
-                          : "bg-gray-50 border border-gray-200 text-gray-600"
-                      }`}
-                    >
-                      {cls}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Topic Selection Bottom Sheet inside modal */}
-              {showTopicSheet && (
-                <div className="absolute inset-0 z-50 flex flex-col justify-end">
-                  <div className="absolute inset-0 bg-black/50" onClick={() => setShowTopicSheet(false)} />
-                  <div className="relative bg-white rounded-t-3xl px-6 pt-8 pb-10 shadow-2xl animate-slide-up">
-                    <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-6" />
-                    <h3 className="text-lg font-semibold text-gray-900 mb-6 text-center">选择作业主题</h3>
-                    <div className="space-y-1">
-                      {homeworkTopics.map((topic) => (
-                        <button
-                          key={topic}
-                          type="button"
-                          onClick={() => {
-                            setHomeworkTitle(topic);
-                            setShowTopicSheet(false);
-                          }}
-                          className={`w-full text-left px-4 py-3.5 text-sm rounded-2xl transition-all ${
-                            homeworkTitle === topic
-                              ? "bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 font-medium"
-                              : "text-gray-600 active:bg-gray-50"
-                          }`}
-                        >
-                          <span className="flex items-center justify-between">
-                            {topic}
-                            {homeworkTitle === topic && (
-                              <svg className="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                              </svg>
-                            )}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Buttons */}
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="flex-1 py-3.5 text-sm text-gray-600 bg-gray-100 rounded-xl active:scale-95 transition-all font-medium"
-                >
-                  取消
-                </button>
-                <button
-                  onClick={handleUpload}
-                  disabled={!homeworkTitle.trim() || !selectedClass}
-                  className="flex-1 py-3.5 text-sm text-white bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl active:scale-95 transition-all font-medium shadow-lg shadow-indigo-200/50 disabled:opacity-40 disabled:shadow-none"
-                >
-                  开始批改
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

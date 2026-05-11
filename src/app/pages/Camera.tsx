@@ -40,7 +40,7 @@ export default function Camera() {
               </div>
             </Link>
             <h1 className="text-base text-white">
-              {mode === "paper" ? "拍摄试卷" : "拍摄课堂作业"}
+              {mode === "paper" ? "拍摄试卷" : "拍照作业"}
             </h1>
           </div>
         </div>
