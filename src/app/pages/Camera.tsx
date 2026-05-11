@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router";
-import { ArrowLeft, Camera as CameraIcon, Zap, ZapOff, Check, Sparkles } from "lucide-react";
+import { ArrowLeft, Camera as CameraIcon, Zap, ZapOff, Check, Sparkles, Image } from "lucide-react";
 
 export default function Camera() {
   const navigate = useNavigate();
@@ -9,6 +9,7 @@ export default function Camera() {
   const [flashOn, setFlashOn] = useState(false);
   const [capturedImages, setCapturedImages] = useState<string[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // 根据mode决定返回路径
   const backPath = mode === "homework" ? "/app/student-selection" : "/app/homework-upload";
@@ -26,6 +27,19 @@ export default function Camera() {
         state: { uploadedStudentId: studentId ? parseInt(studentId) : undefined },
       });
     }, 2000);
+  };
+
+  const handleAlbumPick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files) {
+      const newImages = Array.from(files).map((file) => URL.createObjectURL(file));
+      setCapturedImages((prev) => [...prev, ...newImages]);
+    }
+    e.target.value = "";
   };
 
   return (
@@ -115,6 +129,21 @@ export default function Camera() {
 
         {/* Capture Button */}
         <div className="flex items-center justify-center gap-3">
+          <button
+            onClick={handleAlbumPick}
+            disabled={isProcessing}
+            className="p-3 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 active:scale-90 transition-transform"
+          >
+            <Image className="w-5 h-5 text-white" />
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            multiple
+            className="hidden"
+            onChange={handleFileChange}
+          />
           {capturedImages.length > 0 && (
             <button
               onClick={handleSubmit}

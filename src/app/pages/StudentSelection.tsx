@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router";
 import { ArrowLeft } from "lucide-react";
 
@@ -47,6 +47,24 @@ export default function StudentSelection() {
     }
   }, [location.state?.uploadedStudentId]);
 
+  const pressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pressTriggered = useRef(false);
+
+  const startLongPress = (id: number) => {
+    pressTriggered.current = false;
+    pressTimer.current = setTimeout(() => {
+      pressTriggered.current = true;
+      navigate(`/app/camera?mode=homework&studentId=${id}`);
+    }, 1000);
+  };
+
+  const clearLongPress = () => {
+    if (pressTimer.current) {
+      clearTimeout(pressTimer.current);
+      pressTimer.current = null;
+    }
+  };
+
   const selectStudent = (id: number) => {
     navigate(`/app/camera?mode=homework&studentId=${id}`);
   };
@@ -90,6 +108,9 @@ export default function StudentSelection() {
                 <span className={`text-xs font-medium ${statusMeta.color}`}>{statusMeta.label}</span>
                 <span className={`text-xs ${statusMeta.color} opacity-60`}>{group.length}人</span>
               </div>
+              {status === "已批改" && (
+                <p className="text-[10px] text-gray-400 mb-2 px-1">长按已批改学生可重新拍照</p>
+              )}
               <div className="grid grid-cols-4 gap-3">
                 {group.map((student) => {
                   const isPending = student.status === "待拍照";
@@ -122,13 +143,22 @@ export default function StudentSelection() {
                     <div
                       key={student.id}
                       onClick={() => {
+                        if (pressTriggered.current) {
+                          pressTriggered.current = false;
+                          return;
+                        }
                         if (isPending) {
                           selectStudent(student.id);
                         } else if (isGraded) {
                           navigate(`/app/grading-result/${student.id}`);
                         }
                       }}
-                      className={`bg-white rounded-2xl p-3 border flex flex-col items-center gap-1.5 transition-all duration-300 ${cardStyle}`}
+                      onPointerDown={() => {
+                        if (isGraded) startLongPress(student.id);
+                      }}
+                      onPointerUp={clearLongPress}
+                      onPointerLeave={clearLongPress}
+                      className={`bg-white rounded-2xl p-3 border flex flex-col items-center gap-1.5 transition-all duration-300 select-none ${cardStyle}`}
                     >
                       <div className="relative">
                         <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl border transition-all duration-300 ${avatarStyle}`}>
