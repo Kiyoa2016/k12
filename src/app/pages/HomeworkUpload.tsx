@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Link, useNavigate } from "react-router";
-import { ArrowLeft, FileText, History, CheckCircle2, Clock, Users, TrendingUp, ChevronDown } from "lucide-react";
+import { ArrowLeft, FileText, CheckCircle2, Clock, Users, TrendingUp, ChevronDown } from "lucide-react";
 
 export default function HomeworkUpload() {
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ export default function HomeworkUpload() {
   const handleUpload = () => {
     if (homeworkTitle.trim() && selectedClass) {
       setShowModal(false);
-      navigate("/app/student-selection", { state: { homeworkTitle: homeworkTitle.trim(), selectedClass } });
+      navigate("/app/student-selection", { state: { selectedTopic: homeworkTitle.trim(), selectedClass } });
     }
   };
 
@@ -105,7 +105,7 @@ export default function HomeworkUpload() {
             return (
               <div
                 key={cls.id}
-                onClick={() => navigate("/app/student-selection", { state: { mode: "records" } })}
+                onClick={() => navigate("/app/student-selection", { state: { selectedClass: cls.name, selectedTopic } })}
                 className="bg-white rounded-2xl p-4 active:scale-[0.98] transition-all cursor-pointer shadow-sm border border-blue-50/50"
               >
                 {/* Class Header */}
@@ -163,23 +163,13 @@ export default function HomeworkUpload() {
         </div>
       </main>
 
-      {/* Bottom Buttons */}
-      <div className="shrink-0 px-4 pb-[30px] pt-3 bg-gradient-to-t from-white via-white to-transparent flex gap-3">
-        <button
-          onClick={() => navigate("/app/student-selection", { state: { mode: "records" } })}
-          className="flex-1 py-3.5 text-sm text-indigo-600 bg-white border border-indigo-200 rounded-2xl flex items-center justify-center gap-2 active:scale-[0.98] transition-all shadow-sm font-medium"
-        >
-          <History className="w-5 h-5" />
-          批改记录
-        </button>
-        <button
-          onClick={() => setShowModal(true)}
-          className="flex-1 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl py-3.5 flex items-center justify-center gap-2.5 active:scale-[0.98] transition-all shadow-xl shadow-indigo-300/60 text-white text-sm font-medium"
-        >
-          <FileText className="w-5 h-5" />
-          新建批改
-        </button>
-      </div>
+      {/* FAB — 快速新建批改 */}
+      <button
+        onClick={() => setShowModal(true)}
+        className="fixed bottom-[100px] right-5 w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl shadow-indigo-300/60 active:scale-90 transition-transform z-40"
+      >
+        <FileText className="w-6 h-6 text-white" />
+      </button>
 
       {/* Topic Picker Bottom Sheet */}
       {showTopicPicker && (
